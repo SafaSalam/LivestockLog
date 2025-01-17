@@ -1,6 +1,7 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+import plotly.express as px
 
 def connect_db():
     conn = sqlite3.connect('farm.db')
@@ -82,14 +83,27 @@ with tab3:
 with tab4:
     st.header("Animal Summary and Profit")
     df = fetch_data()
+    
     if not df.empty:
         df['Total Expenses'] = df['initial_cost'] + df['total_food_cost'] + df['total_hr_cost']
         df['Profit'] = df['final_cost'] - df['Total Expenses']
+        
         st.write(df)
+
+        st.subheader("Profit Overview")
+        fig = px.bar(df, x='animal_id', y='Profit', title="Profit per Animal", labels={'animal_id': 'Animal ID', 'Profit': 'Profit (PKR)'})
+        st.plotly_chart(fig)
+
+        st.subheader("Total Expenses vs Final Cost")
+        fig2 = px.scatter(df, x='Total Expenses', y='final_cost', color='Profit', hover_data=['animal_id'],
+                          title="Comparison of Total Expenses and Final Cost")
+        st.plotly_chart(fig2)
+
         st.download_button("Download Data as CSV", df.to_csv(index=False), file_name="farm_data.csv")
     else:
         st.info("No data available.")
-        
+
+
 with tab5:
     st.header("Delete Animal")
     animal_id_to_delete = st.text_input("Enter Animal ID to Delete")
