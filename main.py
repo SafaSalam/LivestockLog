@@ -40,6 +40,15 @@ def finalize_animal(animal_id, final_weight, final_cost):
     conn.commit()
     conn.close()
 
+def delete_animal(animal_id):
+    conn = connect_db()
+    cursor = conn.cursor()
+    cursor.execute('''
+        DELETE FROM animals WHERE animal_id = ?
+    ''', (animal_id,))
+    conn.commit()
+    conn.close()
+    
 def fetch_data():
     conn = connect_db()
     df = pd.read_sql_query('SELECT * FROM animals', conn)
