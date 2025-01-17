@@ -89,3 +89,10 @@ with tab4:
         st.download_button("Download Data as CSV", df.to_csv(index=False), file_name="farm_data.csv")
     else:
         st.info("No data available.")
+        
+with tab5:
+    st.header("Delete Animal")
+    animal_id_to_delete = st.text_input("Enter Animal ID to Delete")
+    if st.button("Delete Animal"):
+        delete_animal(animal_id_to_delete)
+        st.success(f"Animal with ID {animal_id_to_delete} deleted successfully!")
